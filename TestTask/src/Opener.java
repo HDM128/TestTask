@@ -41,18 +41,41 @@ public class Opener {
 	
 	public static ArrayList LoadTheFile (String location) throws FileNotFoundException, IOException, ParseException
 	{
-		ArrayList<JSONObject> workers = new ArrayList<JSONObject>();
+		//ArrayList<JSONObject> workers = new ArrayList<JSONObject>();
+		ArrayList<JSONObject> emplys = new ArrayList();
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(location));
 		
+		JSONArray jsonArray = (JSONArray) jsonObject.get("employees");
 		
 		
-		return workers;
+		
+		for (Object o: jsonArray)
+		{
+			emplys.add((JSONObject) o);
+		}
+		
+		//System.out.println(emplys);
+		
+		return emplys;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
 		
 		String[] targets = AllocateAllFiles("./jsons");
+		ArrayList<JSONObject>[] empl_array = new ArrayList[targets.length];
 		
+		for(int i = 0; i < targets.length; i++)
+		{
+			empl_array[i] = LoadTheFile(targets[i]);
+		}
+		
+		for(int i = 0; i < empl_array.length; i++)
+		{
+			for(JSONObject o : empl_array[i])
+			{
+				System.out.println(o.get("firstName"));
+			}
+		}
 	}
 }
